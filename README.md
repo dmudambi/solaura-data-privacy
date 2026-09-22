@@ -1,14 +1,14 @@
-# Solaura Data Privacy & Transparency
+# Solaura Therapy — Data Privacy & Transparency
 
-**Open audit documentation for Solaura data handling practices.**
+**Open audit documentation for Solaura Therapy data handling practices.**
 
-This repository provides transparent, honest documentation of how [Solaura](https://solaura.app) handles user data, including our current encryption implementation, known limitations, and roadmap for improvement.
+This repository provides transparent, honest documentation of how [Solaura Therapy](https://solaura.app) handles user data, including our current encryption implementation, known limitations, and roadmap for improvement.
 
 > **Note:** The Solaura companion app repository (AURA_APP) is private. This public transparency repo exists to allow external security review of our data handling claims.
 
-## What is Solaura?
+## What is Solaura Therapy?
 
-Solaura is a personal growth and reflection platform developed by **Solaura Technologies, Inc.**, a Delaware C-corporation. The app facilitates guided sessions that generate transcripts, emotional insights, and AI-powered debriefs.
+Solaura Therapy is a clinician support platform developed by **Solaura Technologies, Inc.**, a Delaware C-corporation. The app helps therapists and clinicians by generating AI-powered session debriefs, emotional insights, and personalized recommendations — all subject to clinician review before sharing with clients.
 
 ## Current State: Honest Summary
 
@@ -29,6 +29,7 @@ Solaura is a personal growth and reflection platform developed by **Solaura Tech
 
 | Document | Description |
 |----------|-------------|
+| [Training Transparency](docs/training-transparency.md) | How our AI insight model was developed (no fine-tuning on private data) |
 | [Threat Model](docs/threat-model.md) | Attack surfaces, threat actors, and mitigations |
 | [Data Inventory](docs/data-inventory.md) | Complete field-by-field data sensitivity mapping |
 | [Encryption Design](docs/encryption-design.md) | Key hierarchy, envelope encryption, and roadmap |
