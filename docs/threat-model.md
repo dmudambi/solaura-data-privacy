@@ -1,6 +1,8 @@
 # Threat Model
 
-This document identifies threat actors, attack surfaces, and mitigations for Solaura's data handling.
+This document sets out threat actors, attack surfaces, and mitigations for Solaura's data handling.
+
+*Updated 2026-09-26: added threats specific to the de-identified research corpus (sections 7–9). Threats 1–6 cover live session data, which stays encrypted at rest.*
 
 ## Threat Actors
 
@@ -109,6 +111,52 @@ This document identifies threat actors, attack surfaces, and mitigations for Sol
 
 **Residual risk**: Novel supply chain attacks may not be detected immediately.
 
+### 7. Re-identification of the Research Corpus (rolling out)
+
+**Description**: Someone uses the content of a de-identified record to work out who it is about, for example by combining a distinctive situation with outside knowledge.
+
+**Attack vectors**:
+- Context clues that automated scrubbing missed (unusual events, rare combinations of details)
+- Linking corpus records to outside data sources
+- Matching the time bucket with known session activity
+
+**Mitigations (design)**:
+- Automated removal of names, phone numbers, emails, addresses, IDs, URLs, and exact dates
+- Generalisation of quasi-identifiers (age to decade, location to region or removed, job to category, rare life events paraphrased)
+- Residual-PII rescan. Failing records are quarantined.
+- Human review of random samples
+- No exact timestamps (week bucket at most)
+
+**Residual risk**: **The corpus is de-identified, not anonymous.** Automated scrubbing can miss context clues, and a determined person with outside knowledge could still recognise someone. The mitigations lower this risk but cannot remove it.
+
+### 8. Insider Attempts to Link Corpus Records to People (rolling out)
+
+**Description**: An operator with access to both the live database and the corpus tries to match corpus records to specific users, sessions, or bonds.
+
+**Mitigations (design)**:
+- Separate corpus store
+- No bond ID, user ID, or session ID in corpus records
+- No mapping table. Which bond produced a conversation is never recorded.
+- Week-level time bucket at most
+
+**Residual risk**: An insider who can decrypt live session data could try to match text between the live store and the corpus. The generalisation and paraphrasing steps make this harder but do not rule it out. Access to live data stays protected by the Phase 1 encryption described in threats 1–2.
+
+### 9. Misuse by a Future External Research Recipient (planned, not active)
+
+**Description**: If Solaura licenses de-identified data to outside research organisations in future, a recipient could try to re-identify people, use the data for other purposes, or pass it on.
+
+**Status**: **No data has been shared, licensed, or sold. No research partners exist.**
+
+**Safeguards required before any sharing**:
+- Separate opt-in (Tier 2) from both client and therapist, off by default and revocable
+- Data use agreement that bans re-identification, limits use to research, bans onward transfer, and gives Solaura audit rights
+- Access in a controlled environment where feasible
+- Stricter de-identification and human review for each outbound batch
+- Legal review under the DPDP Act
+- Published list of partners
+
+**Residual risk**: Contracts and audits limit misuse but cannot guarantee a recipient's behaviour. Data shared outside Solaura is harder to control.
+
 ## Attack Surface Summary
 
 | Surface | Sensitivity | Phase 1 Protection | Residual Risk |
@@ -119,6 +167,8 @@ This document identifies threat actors, attack surfaces, and mitigations for Sol
 | LLM inference | High | TLS only | **Ephemeral plaintext exposure** |
 | Client session | High | RLS, secure tokens | Session hijacking |
 | Network transit | Medium | TLS 1.3 | Minimal |
+| Research corpus (rolling out) | High | De-identification, rescan and quarantine, human review, no identifiers or mapping | **Context clues may allow re-identification** |
+| External sharing (planned, not active) | High | DUA, controlled access, per-batch review, DPDP legal review | Recipient misuse despite contract |
 
 ## Phase 2 Mitigations (Roadmap)
 
@@ -136,6 +186,7 @@ This document identifies threat actors, attack surfaces, and mitigations for Sol
 3. Vercel platform security is maintained by Vercel
 4. Users protect their own device and authentication credentials
 5. LLM providers honor their stated data handling policies
+6. The de-identification pipeline runs before any corpus write, and quarantined records are never added to the corpus
 
 ## Out of Scope
 

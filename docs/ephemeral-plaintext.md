@@ -2,6 +2,8 @@
 
 **Honest disclosure of plaintext exposure during LLM-powered features.**
 
+> **Scope (updated 2026-09-26):** This document covers live session processing, where stored data stays encrypted at rest. A short section on plaintext handling in the de-identification pipeline for the research corpus (rolling out) has been added below. See [deidentified-research-corpus.md](deidentified-research-corpus.md).
+
 ## Overview
 
 Solaura uses AI/LLM services (currently OpenAI) to generate personalized session debriefs, insights, and focus recommendations. This document honestly describes the plaintext exposure that occurs during this process.
@@ -215,6 +217,15 @@ To verify our claims, external reviewers can:
 4. Check that encrypted storage occurs post-inference
 5. Confirm DPA is in place with OpenAI
 
+## Plaintext During De-identification (Research Corpus, rolling out)
+
+For sessions where **both** client and therapist opted in, the de-identification pipeline has to read the conversation in plaintext in order to find and remove identifiers. This happens before anything is written to the corpus.
+
+- Processing happens on Solaura's backend at the time of de-identification.
+- If an AI model is used for any scrubbing or paraphrasing step, the same provider exposure described above applies (plaintext over TLS, ephemeral during inference).
+- Only the scrubbed output that passes the residual-PII rescan is stored. Failing records are quarantined, not added to the corpus.
+- Sessions without both opt-ins never enter this pipeline.
+
 ## Summary
 
 | Claim | Honest Status |
@@ -225,3 +236,4 @@ To verify our claims, external reviewers can:
 | "Encrypted at rest" | ✅ True — Stored encrypted in database |
 | "LLM provider sees plaintext" | ✅ **True** — Ephemeral during inference |
 | "Working toward zero-knowledge AI" | ✅ True — Phase 2 roadmap |
+| "De-identification sees plaintext" | ✅ **True** — Opted-in conversations are processed in plaintext to remove identifiers before corpus storage (rolling out) |
