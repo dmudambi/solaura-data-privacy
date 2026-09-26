@@ -2,6 +2,8 @@
 
 Technical specification for Solaura's encryption architecture, including current implementation and roadmap.
 
+> **Scope (updated 2026-09-26):** This document covers **live session data** (stored transcripts and audio, debriefs, and related fields), which stays encrypted at rest under Phase 1. Since 2026-09-26 the main subject of this repository is the de-identified research corpus. See [deidentified-research-corpus.md](deidentified-research-corpus.md). The corpus is protected by de-identification and by having no link to individuals, not by the key hierarchy described here. The Phase 1.5 and Phase 2 roadmap sections below date from 2026-09-21 and this update does not change their status.
+
 ## Design Principles
 
 1. **Defense in depth**: Multiple layers of protection

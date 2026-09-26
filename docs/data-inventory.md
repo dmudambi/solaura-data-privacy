@@ -1,6 +1,8 @@
 # Data Inventory
 
-Complete inventory of sensitive data fields, their storage locations, current protection status, and encryption roadmap.
+Inventory of sensitive data fields, where they are stored, how they are protected today, and the encryption roadmap.
+
+*Updated 2026-09-26: added the de-identified research corpus store and consent flags (rolling out). The live-session tables below are unchanged and remain encrypted at rest.*
 
 ## Sensitivity Levels
 
@@ -83,6 +85,37 @@ Complete inventory of sensitive data fields, their storage locations, current pr
 
 > **Note on auth fields**: Email and phone are required in plaintext for Supabase Auth to function (login, password reset, etc.). These cannot be encrypted without breaking authentication.
 
+### De-identified Research Corpus (separate store, rolling out)
+
+Kept in a **separate store** from the live tables above. See [deidentified-research-corpus.md](deidentified-research-corpus.md). Field names will be published once the store is live.
+
+| Data element | Stored? | Notes |
+|--------------|---------|-------|
+| De-identified conversation text | Yes | Only from sessions where both client and therapist opted in. Direct identifiers removed and quasi-identifiers generalised before storage |
+| Generalised context (age decade, broad region, job category) | Yes, if present | Generalised. Never exact values |
+| Time bucket | Week at most | **No exact timestamp** |
+| Bond ID | **No** | Never recorded |
+| User ID (client or therapist) | **No** | Never recorded |
+| Session ID | **No** | Never recorded |
+| Mapping / lookup table back to people | **None** | No link is kept anywhere |
+
+| Property | Value |
+|----------|-------|
+| Sensitivity | **Critical.** Mental-health content is treated as highly sensitive even after de-identification |
+| Who can link a record to a person | No one. No link is stored. |
+| Individual deletion | **Not possible** once saved, because the link back is never stored. Stated at consent time. |
+| External sharing | **None today.** Planned future licensing to vetted research organisations only with a second, separate opt-in and the safeguards in the corpus design doc |
+| Quarantine | Records that fail the residual-PII rescan are held back and not added to the corpus |
+
+### Corpus consent flags (live app, rolling out)
+
+Each person's consent choices are stored with their account in the live app, not in the corpus.
+
+| Flag | Applies to | Default | Status |
+|------|-----------|---------|--------|
+| Internal-use opt-in (Tier 1) | Client and therapist, separately | Off | Rolling out |
+| External research sharing opt-in (Tier 2) | Client and therapist, separately | Off | Planned, not active |
+
 ## Encryption Status Legend
 
 | Status | Meaning |
@@ -100,6 +133,13 @@ User Input → App Client → Vercel Functions → Supabase
                     [Phase 2: Client encrypts before send]
                               ↓
                     Encrypted blob stored in Supabase
+
+Only if client AND therapist opted in (rolling out):
+Session content → de-identify → generalise → residual-PII rescan
+                                              ├─ fail → quarantine
+                                              └─ pass → separate corpus store
+                                                        (no bond / user / session ID,
+                                                         week bucket at most, no mapping)
 ```
 
 ## Retention Policies
@@ -111,6 +151,7 @@ User Input → App Client → Vercel Functions → Supabase
 | Feedback events | 90 days | Auto-deleted |
 | Shared items | Until deleted | User can revoke/delete |
 | Account data | Account lifetime | User can request deletion |
+| Research corpus contributions | Not individually deletable once saved (no link back) | Withdraw consent to stop future contributions |
 
 ## What Stays Plaintext (By Design)
 

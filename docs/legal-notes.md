@@ -2,6 +2,8 @@
 
 Entity information, regulatory posture, and compliance status for Solaura.
 
+*Updated 2026-09-26 for the de-identified research corpus (rolling out) and planned external research licensing (not active).*
+
 ## Corporate Entity
 
 | Field | Value |
@@ -9,7 +11,7 @@ Entity information, regulatory posture, and compliance status for Solaura.
 | **Legal Name** | Solaura Technologies, Inc. |
 | **Jurisdiction** | Delaware, USA |
 | **Entity Type** | C-Corporation |
-| **Primary Operations** | United States, with users globally |
+| **Primary Operations** | United States, with users globally (including India) |
 
 ## Data Classification
 
@@ -23,6 +25,8 @@ Entity information, regulatory posture, and compliance status for Solaura.
 | Goals and reflections | Sensitive personal data | Personal development content |
 | Email address | Personal data | Required for authentication |
 | Usage metadata | Operational data | Timestamps, session duration |
+| De-identified research corpus (rolling out) | Sensitive. De-identified, **not** anonymous | Opt-in only (client and therapist). No link back to individuals |
+| Corpus consent choices (rolling out) | Personal data | Tier 1 internal-use and Tier 2 external-sharing opt-ins, held in the live app |
 
 ### Sensitivity Acknowledgment
 
@@ -32,7 +36,7 @@ Entity information, regulatory posture, and compliance status for Solaura.
 - Mental health related content
 - Life events and circumstances
 
-We treat this data with the highest level of protection available in our current architecture.
+We treat this data with the highest level of protection available in our current architecture. **Mental-health data is treated as highly sensitive**, including after de-identification.
 
 ## Regulatory Posture
 
@@ -60,7 +64,7 @@ We treat this data with the highest level of protection available in our current
 | Aspect | Status |
 |--------|--------|
 | Consumer rights | Supported (know, delete, opt-out) |
-| Sale of data | We do not sell personal information |
+| Sale of data | We do not sell personal information. No corpus data has been sold, licensed, or shared. Any future licensing of de-identified data to research organisations would require separate opt-in and the safeguards in [deidentified-research-corpus.md](deidentified-research-corpus.md#5-planned-future-use-licensing-to-vetted-research-organisations) |
 | Sensitive PI | Recognized and protected |
 
 ### India DPDP Act (Digital Personal Data Protection)
@@ -70,8 +74,11 @@ We treat this data with the highest level of protection available in our current
 | Awareness | ✅ DPDP-aware design |
 | Data fiduciary | Solaura Technologies, Inc. |
 | Significant data fiduciary | To be determined based on user volume |
-| Consent | Obtained through Terms of Service |
-| Purpose limitation | Data used only for stated service purposes |
+| Consent (service) | Obtained through Terms of Service |
+| Consent (research corpus, rolling out) | **Specific, separate consent** from both client and therapist. Off by default, revocable for future sessions. Not bundled into the Terms of Service |
+| Consent (external research sharing, planned) | A **second, separate** specific consent from both client and therapist. Off by default, revocable. Not active |
+| Purpose limitation | Data used only for stated service purposes. Corpus data is used only to improve Solaura's internal models unless Tier 2 consent is given and the sharing safeguards are in place |
+| External sharing | **None today.** Legal review under the DPDP Act is required before any sharing with research organisations |
 | Data localization | Monitoring requirements; currently US-processed |
 
 **Note**: We are monitoring DPDP implementation and will adapt our practices as regulations are finalized. Users in India are subject to the same data protections as all users.
@@ -97,6 +104,9 @@ To maintain honesty and avoid overclaiming:
 | "We never see your data" | ❌ Not true — server processes data for LLM calls |
 | "Zero-knowledge architecture" | ❌ Not yet — roadmap for Phase 2 |
 | "Therapy or healthcare" | ❌ Solaura is NOT a healthcare service |
+| "Anonymous" research data | ❌ Not claimed. Corpus data is de-identified, not anonymous |
+| "Research partners" / data licensing today | ❌ None. No partners exist and no data has been shared, licensed, or sold |
+| De-identification certifications, audits, or accuracy metrics | ❌ None claimed |
 
 ## Data Processor Relationships
 
@@ -125,6 +135,7 @@ All users have the following rights:
 | **Portability** | Export in standard format |
 | **Rectification** | Edit your sessions and profile |
 | **Withdraw consent** | Delete account |
+| **Withdraw research consent** | Turn off the corpus opt-in (Tier 1 or Tier 2) in the app. Applies to future sessions. Saved de-identified contributions cannot be individually deleted because no link back is kept. This is stated at consent time (rolling out) |
 
 ### Exercising Rights
 
@@ -170,7 +181,8 @@ For privacy-related inquiries:
 
 | Date | Change |
 |------|--------|
-| [Initial] | Initial version |
+| 2026-09-21 | Initial version |
+| 2026-09-26 | Added research corpus consent (DPDP specific consent), planned external research licensing (not active), mental-health sensitivity statement, and non-claims for anonymity, partners, and certifications |
 
 ---
 

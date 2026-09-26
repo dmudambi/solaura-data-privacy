@@ -4,7 +4,9 @@ Verification steps for external security reviewers to validate Solaura's data ha
 
 ## Purpose
 
-This checklist enables independent verification of claims made in this transparency documentation. Auditors should be able to confirm implementation matches documentation.
+This checklist lets outside reviewers check the claims made in this documentation and confirm that the implementation matches them.
+
+*Updated 2026-09-26: added Section 10 for the de-identified research corpus (rolling out). Sections 1–9 cover live session data. This checklist is a tool for reviewers. It does not mean an audit has been performed.*
 
 ---
 
@@ -234,6 +236,41 @@ This checklist enables independent verification of claims made in this transpare
 
 ---
 
+## 10. De-identified Research Corpus (rolling out)
+
+These checks apply once each component is live. See [deidentified-research-corpus.md](deidentified-research-corpus.md) for the design. Table and column names will be published when the corpus store is live.
+
+### 10.1 Consent
+
+- [ ] **Default off**: New client and therapist accounts have the corpus opt-in (Tier 1) set to off
+- [ ] **Both parties required**: A session is only eligible if both the client and the therapist in the bond had opted in at session time
+- [ ] **Revocation**: Turning the opt-in off stops future sessions from entering the pipeline
+- [ ] **Consent text**: The consent screen states that data is de-identified (not anonymous), that scrubbing can miss context clues, and that saved contributions cannot be individually deleted
+- [ ] **Tier 2 separate**: External research sharing is a separate opt-in (default off), not implied by Tier 1
+
+### 10.2 De-identification pipeline
+
+- [ ] **Scrubbing before storage**: No code path writes to the corpus store before direct-identifier removal and generalisation
+- [ ] **Direct identifiers**: Names, phone numbers, emails, addresses, IDs, URLs, and exact dates are targeted
+- [ ] **Generalisation**: Age → decade, location → region or removed, job → category, rare life events paraphrased
+- [ ] **Rescan and quarantine**: Records that fail the residual-PII rescan are quarantined and not written to the corpus
+- [ ] **Human review**: A documented process exists for reviewing random samples
+
+### 10.3 Storage and unlinkability
+
+- [ ] **Separate store**: The corpus is not in the live session tables
+- [ ] **No identifiers**: Corpus schema has no bond ID, user ID, or session ID column
+- [ ] **No exact timestamp**: Time is stored as a week bucket at most
+- [ ] **No mapping**: No table, log, or key links corpus records to people, sessions, or bonds
+- [ ] **No indirect linkage in logs**: Pipeline logs do not record which session or bond produced a corpus record
+
+### 10.4 External sharing (planned, not active)
+
+- [ ] **No outbound sharing today**: No corpus export or partner access exists
+- [ ] **Before any sharing**: Signed data use agreement (no re-identification, research only, no onward transfer, audit rights), controlled-environment access where feasible, stricter per-batch de-identification and human review, DPDP legal review, and a published partner list in this repository
+
+---
+
 ## Audit Report Template
 
 ```markdown
@@ -260,6 +297,7 @@ This checklist enables independent verification of claims made in this transpare
 | Data Retention | X/Y | | |
 | Code Review | X/Y | | |
 | Compliance | X/Y | | |
+| Research Corpus | X/Y | | |
 
 ## Findings
 
